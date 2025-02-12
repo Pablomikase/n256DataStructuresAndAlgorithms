@@ -83,9 +83,8 @@ if __name__ == '__main__':
     our_cache.set(6, 6)  # This should evict key 3
     assert our_cache.get(3) == -1  # Returns -1, 3 was evicted
 
-    # Test Case 2 - tests the limit of the cache
+    # Test Case 2 - tests the limit of the cache (edge case)
     my_cache = LRU_Cache(5)
-    assert my_cache.get(1) == -1
     my_cache.set(1, 1)
     my_cache.set(2, 2)
     my_cache.set(3, 3)
@@ -119,3 +118,32 @@ if __name__ == '__main__':
     assert cache.get(1) == 'C'
     assert cache.get(2) == 'B'
     assert len(cache.cache) == 2
+
+    #Test Case 5 - Tests when the cache is empty
+    empty_cache = LRU_Cache(5)
+    assert my_cache.get(1) == -1
+
+    #Test Case 6 - Tests when added None as a value (edge case)
+    cache = LRU_Cache(3)
+    cache.set(None, "null-key")
+    cache.set(1, None)
+    assert cache.get(None) == "null-key"  # None como clave debe funcionar
+    assert cache.get(1) is None  # None como valor debe funcionar correctamente
+    cache.set(2, 2)
+    cache.set(3, 3)
+    cache.set(4, 4)  # Esto debería eliminar la clave None
+    assert cache.get(None) == -1  # None fue eliminado
+
+    #Test Case 7 - Large cache (edge case)
+    large_cache = LRU_Cache(10 ** 6)
+    for i in range(10 ** 6):
+        large_cache.set(i, i * 2)
+    assert large_cache.get(500000) == 1000000
+    assert large_cache.get(999999) == 1999998
+    assert large_cache.get(10 ** 6) == -1
+
+
+
+
+
+
