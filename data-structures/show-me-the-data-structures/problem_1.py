@@ -83,8 +83,39 @@ if __name__ == '__main__':
     our_cache.set(6, 6)  # This should evict key 3
     assert our_cache.get(3) == -1  # Returns -1, 3 was evicted
 
-    # Test Case 2
-    pass
+    # Test Case 2 - tests the limit of the cache
+    my_cache = LRU_Cache(5)
+    assert my_cache.get(1) == -1
+    my_cache.set(1, 1)
+    my_cache.set(2, 2)
+    my_cache.set(3, 3)
+    my_cache.set(4, 4)
+    my_cache.set(5, 5)
+    my_cache.set(6, 6)
+    assert my_cache.get(1) == -1
+    assert my_cache.get(2) == 2
+    assert my_cache.get(3) == 3
+    assert my_cache.get(4) == 4
+    assert my_cache.get(5) == 5
+    assert my_cache.get(6) == 6
 
-    # Test Case 3
-    pass
+    # Test Case 3 - Tests when cache moves elements and don't delete its value
+    other_cache = LRU_Cache(3)
+    other_cache.set(1, 'A')
+    other_cache.set(2, 'B')
+    other_cache.set(3, 'C')
+    other_cache.get(1)
+    other_cache.set(4, 'D')
+    assert other_cache.get(1) == 'A'
+    assert other_cache.get(2) == -1
+    assert other_cache.get(3) == 'C'
+    assert other_cache.get(4) == 'D'
+
+    #Test Case 4 - Tests when an element is inserted multiple times
+    cache = LRU_Cache(2)
+    cache.set(1, 'A')
+    cache.set(2, 'B')
+    cache.set(1, 'C')
+    assert cache.get(1) == 'C'
+    assert cache.get(2) == 'B'
+    assert len(cache.cache) == 2
