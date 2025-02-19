@@ -132,8 +132,51 @@ if __name__ == "__main__":
     print("Test Case 1")
     print(is_user_in_group("sub_child_user", parent))  # Expected output: True
 
-    # Test Case 2
-    pass
+    # Test Case 2: User is not in the group
+    print("Test Case 2")
+    print(is_user_in_group("random_user", parent))  # Expected output: False
 
-    # Test Case 3
-    pass
+    # Test Case 3: User is directly in the parent group
+    parent_user = "parent_user"
+    parent.add_user(parent_user)
+    print("Test Case 3")
+    print(is_user_in_group("parent_user", parent))  # Expected output: True
+
+    # Test Case 4: User is directly in a child group
+    child_user = "child_user"
+    child.add_user(child_user)
+    print("Test Case 4")
+    print(is_user_in_group("child_user", parent))  # Expected output: True
+
+    # Test Case 5: User is None
+    print("Test Case 5")
+    print(is_user_in_group(None, parent))  # Expected output: False
+
+    # Test Case 7: Both user and group are None
+    print("Test Case 7")
+    print(is_user_in_group(None, None))  # Expected output: False
+
+    # Test Case 8: User is an empty string
+    print("Test Case 8")
+    print(is_user_in_group("", parent))  # Expected output: False
+
+    # Test Case 9: Empty group (no users, no sub-groups)
+    empty_group = Group("empty_group")
+    print("Test Case 9")
+    print(is_user_in_group("any_user", empty_group))  # Expected output: False
+
+    # Test Case 10: Large nested structure
+    deep_parent = Group("deep_parent")
+    level_1 = Group("level_1")
+    level_2 = Group("level_2")
+    level_3 = Group("level_3")
+    level_4 = Group("level_4")
+
+    level_4.add_user("deep_user")
+    level_3.add_group(level_4)
+    level_2.add_group(level_3)
+    level_1.add_group(level_2)
+    deep_parent.add_group(level_1)
+
+    print("Test Case 10")
+    print(is_user_in_group("deep_user", deep_parent))  # Expected output: True
