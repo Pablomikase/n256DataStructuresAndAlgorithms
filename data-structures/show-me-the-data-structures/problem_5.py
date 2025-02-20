@@ -79,14 +79,17 @@ class Blockchain:
         """
         Constructs all the necessary attributes for the Blockchain object.
         """
-        pass
+        self.genesis_block = None
+        self.chain = []
+
 
     def create_genesis_block(self) -> None:
         """
         Create the genesis block (the first block in the blockchain).
         """
-        # Genesis block has no previous hash and empty data
-        pass
+        self.genesis_block = Block(datetime.datetime.now(), "genesis_block", "0")
+        self.chain.append(self.genesis_block)
+
 
     def add_block(self, data: str) -> None:
         """
@@ -97,7 +100,12 @@ class Blockchain:
         data : str
             The data to be stored in the new block.
         """
-        pass
+        if self.genesis_block is None:
+            self.create_genesis_block()
+        last_block = self.chain[-1]
+        new_block = Block(datetime.datetime.now(), data, last_block.calc_hash())
+        self.chain.append(new_block)
+
 
     def __repr__(self) -> str:
         """
@@ -124,7 +132,40 @@ if __name__ == "__main__":
     print(blockchain)
 
     # Test Case 2
-    pass
+    block1 = Block(datetime.datetime.now(), "Data 1", "0")
+    block2 = Block(datetime.datetime.now(), "Data 2", "0")
+    print(block1)
+    print(block2)
+    assert block1.hash != block2.hash # Different data, different hash
+    print("Test Case 2: Pass")
 
-    # Test Case 3
-    pass
+    # Test Case 3 - Create a blockchain with a genesis block
+    blockchain = Blockchain()
+    blockchain.create_genesis_block()
+    assert len(blockchain.chain) == 1
+    assert blockchain.chain[0].data == "genesis_block"
+    print("Test Case 3: Pass")
+
+    #Test Case 4 - Validate previous hash is present in the current block
+    blockchain = Blockchain()
+    blockchain.add_block("Block 1 Data")
+    blockchain.add_block("Block 2 Data")
+    assert blockchain.chain[1].previous_hash == blockchain.chain[0].hash
+    assert blockchain.chain[2].previous_hash == blockchain.chain[1].hash
+    print("Test Case 4: Pass")
+
+    #Test Case 5 - Add block with empty data
+    blockchain = Blockchain()
+    blockchain.add_block("")
+    assert len(blockchain.chain) == 2
+    print("Test Case 5: Pass")
+
+    #Test Case 6 - Add long data to the block
+    blockchain = Blockchain()
+    long_data = "A" * (10 ** 6)  # 1 millón de caracteres
+    blockchain.add_block(long_data)
+    #Print chain to check how long the data is
+    #print(blockchain)
+    assert len(blockchain.chain) == 2
+    print("Test Case 6: Pass")
+
