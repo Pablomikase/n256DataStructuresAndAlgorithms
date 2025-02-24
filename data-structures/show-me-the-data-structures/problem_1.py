@@ -41,7 +41,6 @@ class LRU_Cache:
         """
         found_value = self.cache.get(key, -1)
         if found_value != -1:
-            # Move the key to the end to indicate that it was recently used
             self.cache.move_to_end(key)
         return found_value
 
